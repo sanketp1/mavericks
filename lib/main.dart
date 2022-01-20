@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mavericks/pages/homepage.dart';
+import 'package:mavericks/pages/test.dart';
 
 void main() {
   runApp(const MyApp());

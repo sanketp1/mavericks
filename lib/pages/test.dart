@@ -8,12 +8,12 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 import 'package:mavericks/data.dart';
 
-class HomePage extends StatefulWidget {
+class TestPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _TestPageState createState() => _TestPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -59,7 +59,28 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.left,
                     ),
 
-                   
+                    // DropdownButton(
+                    //   items: [
+                    //     DropdownMenuItem(
+                    //       child: Text(
+                    //         'Solar System',
+                    //         style: TextStyle(
+                    //           fontFamily: 'Avenir',
+                    //           fontSize: 24,
+                    //           color: const Color(0x7cdbf1ff),
+                    //           fontWeight: FontWeight.w500,
+                    //         ),
+                    //         textAlign: TextAlign.left,
+                    //       ),
+                    //     ),
+                    //   ],
+                    //   onChanged: (value) {},
+                    //   icon: Padding(
+                    //     padding: const EdgeInsets.only(left: 16.0),
+                    //     child: Image.asset('assets/drop_down_icon.png'),
+                    //   ),
+                    //   underline: SizedBox(),
+                    // ),
                   ],
                 ),
               ),
