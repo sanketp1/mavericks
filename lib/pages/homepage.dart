@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'dart:ui';
+import 'package:mavericks/pages/test.dart';
 
 import 'package:flutter/material.dart';
 import 'package:mavericks/constants.dart';
@@ -13,15 +14,68 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  late AnimationController _drawerSlideController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _drawerSlideController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+  }
+
+  @override
+  void dispose() {
+    _drawerSlideController.dispose();
+    super.dispose();
+  }
+
+  bool _isDrawerOpen() {
+    return _drawerSlideController.value == 1.0;
+  }
+
+  bool _isDrawerOpening() {
+    return _drawerSlideController.status == AnimationStatus.forward;
+  }
+
+  bool _isDrawerClosed() {
+    return _drawerSlideController.value == 0.0;
+  }
+
+  void _toggleDrawer() {
+    if (_isDrawerOpen() || _isDrawerOpening()) {
+      _drawerSlideController.reverse();
+    } else {
+      _drawerSlideController.forward();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: gradientEndColor,
-      drawer: Drawer(
-        backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: PopupMenuButton(
+          offset: Offset(10,10),
+          icon: Icon(Icons.menu),
+              itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: Text("First"),
+                    value: 1,
+                  ),
+                  PopupMenuItem(
+                    child: Text("Second"),
+                    value: 2,
+                  )
+                ]
+              
+            ),
+        backgroundColor: gradientStartColor,
+        elevation: 0.0,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -58,8 +112,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                       textAlign: TextAlign.left,
                     ),
-
-                   
                   ],
                 ),
               ),
@@ -83,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                 height: 10,
               ),
               Container(
-                height: 500,
+                height: height * 0.6115,
                 padding: const EdgeInsets.only(left: 32),
                 child: Swiper(
                   itemCount: sensorInfo.length,
@@ -98,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                       children: <Widget>[
                         Column(
                           children: <Widget>[
-                            SizedBox(height: 70),
+                            SizedBox(height: height * (70 / height)),
                             Container(
                               width: width * 0.83333,
                               height: height * 0.355,
@@ -154,13 +206,13 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Positioned(
-                          right: 5,
-                          bottom: 130,
+                          right: 0,
+                          bottom: 80,
                           child: Text(
                             sensorInfo[index].position.toString(),
                             style: TextStyle(
                               fontFamily: 'Avenir',
-                              fontSize: 200,
+                              fontSize: 180,
                               color: primaryTextColor.withOpacity(0.08),
                               fontWeight: FontWeight.w900,
                             ),
@@ -176,6 +228,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+   
+       
     );
   }
 }

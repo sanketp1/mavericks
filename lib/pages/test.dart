@@ -1,202 +1,438 @@
-import 'dart:developer';
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:mavericks/constants.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-
+import 'package:mavericks/constants.dart';
 import 'package:mavericks/data.dart';
+import 'package:mavericks/pages/contributeUs.dart';
 
-class TestPage extends StatefulWidget {
+class ExampleStaggeredAnimations extends StatefulWidget {
+  const ExampleStaggeredAnimations({
+    Key? key,
+  }) : super(key: key);
+
   @override
-  _TestPageState createState() => _TestPageState();
+  _ExampleStaggeredAnimationsState createState() =>
+      _ExampleStaggeredAnimationsState();
 }
 
-class _TestPageState extends State<TestPage> {
+class _ExampleStaggeredAnimationsState extends State<ExampleStaggeredAnimations>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _drawerSlideController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _drawerSlideController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+  }
+
+  @override
+  void dispose() {
+    _drawerSlideController.dispose();
+    super.dispose();
+  }
+
+  bool _isDrawerOpen() {
+    return _drawerSlideController.value == 1.0;
+  }
+
+  bool _isDrawerOpening() {
+    return _drawerSlideController.status == AnimationStatus.forward;
+  }
+
+  bool _isDrawerClosed() {
+    return _drawerSlideController.value == 0.0;
+  }
+
+  void _toggleDrawer() {
+    if (_isDrawerOpen() || _isDrawerOpening()) {
+      _drawerSlideController.reverse();
+    } else {
+      _drawerSlideController.forward();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: gradientEndColor,
-      drawer: Drawer(
-        backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
+      appBar: _buildAppBar(),
+      body: Stack(
+        children: [
+          _buildContent(width, height),
+          _buildDrawer(),
+        ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [gradientStartColor, gradientEndColor],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.3, 0.7])),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 32, top: 20),
-                child: Text(
-                  "Hi",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5, left: 32, bottom: 20),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Sanket Patil',
-                      style: TextStyle(
-                        fontFamily: 'BalsamiqSans',
-                        fontSize: 30,
-                        color: const Color(0xffffffff),
-                        fontWeight: FontWeight.w900,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
+    );
+  }
 
-                    // DropdownButton(
-                    //   items: [
-                    //     DropdownMenuItem(
-                    //       child: Text(
-                    //         'Solar System',
-                    //         style: TextStyle(
-                    //           fontFamily: 'Avenir',
-                    //           fontSize: 24,
-                    //           color: const Color(0x7cdbf1ff),
-                    //           fontWeight: FontWeight.w500,
-                    //         ),
-                    //         textAlign: TextAlign.left,
-                    //       ),
-                    //     ),
-                    //   ],
-                    //   onChanged: (value) {},
-                    //   icon: Padding(
-                    //     padding: const EdgeInsets.only(left: 16.0),
-                    //     child: Image.asset('assets/drop_down_icon.png'),
-                    //   ),
-                    //   underline: SizedBox(),
-                    // ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 32),
-                child: Text(
-                  'Dashboard',
-                  style: TextStyle(
-                    fontFamily: 'BalsamiqSans',
-                    fontSize: 25,
-                    color: const Color(0xffffffff),
-                    fontWeight: FontWeight.w900,
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: gradientStartColor,
+      elevation: 0.0,
+      automaticallyImplyLeading: false,
+      leading: AnimatedBuilder(
+        animation: _drawerSlideController,
+        builder: (context, child) {
+          return IconButton(
+            onPressed: _toggleDrawer,
+            icon: _isDrawerOpen() || _isDrawerOpening()
+                ? const Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                  )
+                : const Icon(
+                    Icons.menu,
+                    color: Colors.white,
                   ),
-                  textAlign: TextAlign.left,
-                ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildContent(double width, double height) {
+    // Put page content here.
+
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [gradientStartColor, gradientEndColor],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.3, 0.7])),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 32, top: 20),
+              child: Text(
+                "Hi",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 500,
-                padding: const EdgeInsets.only(left: 32),
-                child: Swiper(
-                  itemCount: sensorInfo.length,
-                  itemWidth: MediaQuery.of(context).size.width - 2 * 64,
-                  layout: SwiperLayout.STACK,
-                  pagination: SwiperPagination(
-                    builder:
-                        DotSwiperPaginationBuilder(activeSize: 20, space: 8),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5, left: 32, bottom: 20),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Sanket Patil',
+                    style: TextStyle(
+                      fontFamily: 'BalsamiqSans',
+                      fontSize: 30,
+                      color: const Color(0xffffffff),
+                      fontWeight: FontWeight.w900,
+                    ),
+                    textAlign: TextAlign.left,
                   ),
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            SizedBox(height: 70),
-                            Container(
-                              width: width * 0.83333,
-                              height: height * 0.355,
-                              child: Card(
-                                elevation: 8,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(32),
-                                ),
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(32.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(height: 100),
-                                      Text(
-                                        sensorInfo[index].name.toString(),
-                                        style: TextStyle(
-                                          fontFamily: 'Avenir',
-                                          fontSize: 22,
-                                          color: const Color(0xff47455f),
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                        textAlign: TextAlign.left,
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 32),
+              child: Text(
+                'Dashboard',
+                style: TextStyle(
+                  fontFamily: 'BalsamiqSans',
+                  fontSize: 25,
+                  color: const Color(0xffffffff),
+                  fontWeight: FontWeight.w900,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: height * 0.6115,
+              padding: const EdgeInsets.only(left: 32),
+              child: Swiper(
+                itemCount: sensorInfo.length,
+                itemWidth: MediaQuery.of(context).size.width - 2 * 64,
+                layout: SwiperLayout.STACK,
+                pagination: SwiperPagination(
+                  builder: DotSwiperPaginationBuilder(activeSize: 20, space: 8),
+                ),
+                itemBuilder: (context, index) {
+                  return Stack(
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          SizedBox(height: height * (70 / height)),
+                          Container(
+                            width: width * 0.83333,
+                            height: height * 0.355,
+                            child: Card(
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32),
+                              ),
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(32.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(height: 100),
+                                    Text(
+                                      sensorInfo[index].name.toString(),
+                                      style: TextStyle(
+                                        fontFamily: 'Avenir',
+                                        fontSize: 22,
+                                        color: const Color(0xff47455f),
+                                        fontWeight: FontWeight.w900,
                                       ),
-                                      SizedBox(
-                                        height: 10,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      sensorInfo[index].data.toString(),
+                                      style: TextStyle(
+                                        fontFamily: 'Avenir',
+                                        fontSize: 26,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      Text(
-                                        sensorInfo[index].data.toString(),
-                                        style: TextStyle(
-                                          fontFamily: 'Avenir',
-                                          fontSize: 26,
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ],
-                                  ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        Hero(
-                          tag: int.parse(sensorInfo[index].position.toString()),
-                          child: Image.asset(
-                            sensorInfo[index].icon.toString(),
-                            width: 150,
-                            height: 200,
                           ),
+                        ],
+                      ),
+                      Hero(
+                        tag: int.parse(sensorInfo[index].position.toString()),
+                        child: Image.asset(
+                          sensorInfo[index].icon.toString(),
+                          width: 150,
+                          height: 200,
                         ),
-                        Positioned(
-                          right: 5,
-                          bottom: 130,
-                          child: Text(
-                            sensorInfo[index].position.toString(),
-                            style: TextStyle(
-                              fontFamily: 'Avenir',
-                              fontSize: 200,
-                              color: primaryTextColor.withOpacity(0.08),
-                              fontWeight: FontWeight.w900,
-                            ),
-                            textAlign: TextAlign.left,
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 80,
+                        child: Text(
+                          sensorInfo[index].position.toString(),
+                          style: TextStyle(
+                            fontFamily: 'Avenir',
+                            fontSize: 180,
+                            color: primaryTextColor.withOpacity(0.08),
+                            fontWeight: FontWeight.w900,
                           ),
+                          textAlign: TextAlign.left,
                         ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+
+    ;
+  }
+
+  Widget _buildDrawer() {
+    return AnimatedBuilder(
+      animation: _drawerSlideController,
+      builder: (context, child) {
+        return FractionalTranslation(
+          translation: Offset(1.0 - _drawerSlideController.value, 0.0),
+          child: _isDrawerClosed() ? const SizedBox() : Menu(),
+        );
+      },
+    );
+  }
+}
+
+class Menu extends StatefulWidget {
+  @override
+  _MenuState createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
+  static const _menuTitles = [
+    'Dashboard',
+    'About us',
+    'Contribute us',
+    'Logout',
+  ];
+  static List<Icon> _icon = [
+    Icon(
+      Icons.dashboard,
+      color: Colors.white,
+    ),
+    Icon(
+      Icons.person,
+      color: Colors.white,
+    ),
+    Icon(
+      Icons.money,
+      color: Colors.white,
+    ),
+    Icon(
+      Icons.logout,
+      color: Colors.white,
+    )
+  ];
+
+  static const _initialDelayTime = Duration(milliseconds: 100);
+  static const _itemSlideTime = Duration(milliseconds: 250);
+  static const _staggerTime = Duration(milliseconds: 50);
+  static const _buttonDelayTime = Duration(milliseconds: 150);
+  static const _buttonTime = Duration(milliseconds: 500);
+  final _animationDuration = _initialDelayTime +
+      (_staggerTime * _menuTitles.length) +
+      _buttonDelayTime +
+      _buttonTime;
+
+  late AnimationController _staggeredController;
+  final List<Interval> _itemSlideIntervals = [];
+  late Interval _buttonInterval;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _createAnimationIntervals();
+
+    _staggeredController = AnimationController(
+      vsync: this,
+      duration: _animationDuration,
+    )..forward();
+  }
+
+  void _createAnimationIntervals() {
+    for (var i = 0; i < _menuTitles.length; ++i) {
+      final startTime = _initialDelayTime + (_staggerTime * i);
+      final endTime = startTime + _itemSlideTime;
+      _itemSlideIntervals.add(
+        Interval(
+          startTime.inMilliseconds / _animationDuration.inMilliseconds,
+          endTime.inMilliseconds / _animationDuration.inMilliseconds,
+        ),
+      );
+    }
+
+    final buttonStartTime =
+        Duration(milliseconds: (_menuTitles.length * 50)) + _buttonDelayTime;
+    final buttonEndTime = buttonStartTime + _buttonTime;
+    _buttonInterval = Interval(
+      buttonStartTime.inMilliseconds / _animationDuration.inMilliseconds,
+      buttonEndTime.inMilliseconds / _animationDuration.inMilliseconds,
+    );
+  }
+
+  @override
+  void dispose() {
+    _staggeredController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: gradientStartColor,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          _buildFlutterLogo(),
+          _buildContent(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFlutterLogo() {
+    return Positioned(
+      right: -225,
+      bottom: -50,
+      child: Opacity(
+          opacity: 0.2,
+          child: Image.asset(
+            'assets/icons/logobg.png',
+            color: Colors.white,
+          )),
+    );
+  }
+
+  Widget _buildContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        ..._buildListItems(),
+        const Spacer(),
+      ],
+    );
+  }
+
+  List<Widget> _buildListItems() {
+    final listItems = <Widget>[];
+    for (var i = 0; i < _menuTitles.length; ++i) {
+      listItems.add(
+        AnimatedBuilder(
+          animation: _staggeredController,
+          builder: (context, child) {
+            final animationPercent = Curves.easeOut.transform(
+              _itemSlideIntervals[i].transform(_staggeredController.value),
+            );
+            final opacity = animationPercent;
+            final slideDistance = (1.0 - animationPercent) * 150;
+
+            return Opacity(
+              opacity: opacity,
+              child: Transform.translate(
+                offset: Offset(slideDistance, 0),
+                child: child,
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+            child: InkWell(
+              onTap: () {
+                if (i == 2) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ContributeUs()));
+                }
+              },
+              child: ListTile(
+                leading: _icon[i],
+                title: Text(
+                  _menuTitles[i],
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return listItems;
   }
 }
