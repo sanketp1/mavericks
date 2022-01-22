@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "513138908572",
+    "firebase_url": "https://authtest-a4606-default-rtdb.firebaseio.com",
+    "project_id": "authtest-a4606",
+    "storage_bucket": "authtest-a4606.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513138908572:android:77238cc9a0c42bd73ffc59",
+        "android_client_info": {
+          "package_name": "com.devfuas.mavericks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513138908572-ong5tgvh069usd2olnq5rn3iei7dgddv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIZZrt46vFjITw-6q3HBnGO9UcTNN4dyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513138908572-ong5tgvh069usd2olnq5rn3iei7dgddv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

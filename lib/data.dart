@@ -10,6 +10,8 @@ class SensorData {
     this.data,
     this.icon,
   });
+
+  static void fromJson(Map<String, dynamic> data) {}
 }
 
 List<SensorData> sensorInfo = [

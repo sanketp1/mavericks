@@ -8,6 +8,10 @@ class ContributeUs extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: gradientStartColor,
+      appBar: AppBar(
+        backgroundColor: gradientStartColor,
+        elevation: 0.0,
+      ),
       body: SafeArea(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -25,6 +29,8 @@ class ContributeUs extends StatelessWidget {
                   width: 300,
                   decoration: BoxDecoration(
                       color: Colors.white,
+                      image: DecorationImage(
+                          image: AssetImage('assets/payment.jpg')),
                       borderRadius: BorderRadius.circular(5)),
                 ),
                 SizedBox(
@@ -32,7 +38,8 @@ class ContributeUs extends StatelessWidget {
                 ),
                 Text(
                   '#Team_Mavericks',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 )
               ],
             ),
@@ -69,7 +76,7 @@ class ContributeUs extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'BalsamiqSansBold',
               color: Colors.white,
-              fontSize: 38,
+              fontSize: 35,
             ),
           ),
           Padding(
