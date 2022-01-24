@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage>
   String? getLocation;
   String? temperature;
   String? depthDistance;
-  List sensorData = [];
 
   @override
   void initState() {
@@ -53,14 +52,8 @@ class _HomePageState extends State<HomePage>
         fuelLevel = show['fuel'].toString() + "\t%";
         batteryLevel = show['battery'].toString() + "\t%";
         getLocation = show['getLocation'].toString();
-        temperature = show['temperature'].toString()+"\t°C";
-        depthDistance = show['depthDistance'].toString()+"\tCm";
-
-        sensorData.add(getLocation);
-        sensorData.add(batteryLevel);
-        sensorData.add(fuelLevel);
-        sensorData.add(temperature);
-        sensorData.add(depthDistance);
+        temperature = show['temperature'].toString() + "\t°C";
+        depthDistance = show['depthDistance'].toString() + "\tCm";
       });
     });
   }
@@ -94,7 +87,7 @@ class _HomePageState extends State<HomePage>
       appBar: _buildAppBar(),
       body: Stack(
         children: [
-          _buildContent(width, height, sensorData),
+          _buildContent(width, height),
           _buildDrawer(),
         ],
       ),
@@ -126,7 +119,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _buildContent(double width, double height, List sensorData) {
+  Widget _buildContent(double width, double height) {
     // Put page content here.
 
     return Container(
@@ -154,17 +147,18 @@ class _HomePageState extends State<HomePage>
               padding: const EdgeInsets.only(top: 5, left: 32, bottom: 20),
               child: Column(
                 children: <Widget>[
+                
                   Text(
                     'Sanket Patil',
                     style: TextStyle(
                       fontFamily: 'BalsamiqSans',
-                      fontSize: 30,
+                      fontSize: width*0.07653,
                       color: const Color(0xffffffff),
                       fontWeight: FontWeight.w900,
                     ),
                     textAlign: TextAlign.left,
                   ),
-                ],
+                ], 
               ),
             ),
             SizedBox(
@@ -176,7 +170,7 @@ class _HomePageState extends State<HomePage>
                 'Dashboard',
                 style: TextStyle(
                   fontFamily: 'BalsamiqSans',
-                  fontSize: 25,
+                  fontSize: width*0.06365,
                   color: const Color(0xffffffff),
                   fontWeight: FontWeight.w900,
                 ),
@@ -221,7 +215,7 @@ class _HomePageState extends State<HomePage>
                                       sensorInfo[index].name.toString(),
                                       style: TextStyle(
                                         fontFamily: 'Avenir',
-                                        fontSize: 22,
+                                        fontSize: width*0.0561,
                                         color: const Color(0xff47455f),
                                         fontWeight: FontWeight.w900,
                                       ),
@@ -230,11 +224,46 @@ class _HomePageState extends State<HomePage>
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    if(index == 0) Text(getLocation ?? "updating",style: TextStyle(color: Colors.green, fontSize: 28, fontWeight: FontWeight.w500),) ,
-                                    if(index == 1) Text(batteryLevel ?? "updating",style: TextStyle(color: Colors.green, fontSize: 28, fontWeight: FontWeight.w500),) ,
-                                    if(index == 2) Text(fuelLevel ?? "updating",style: TextStyle(color: Colors.green, fontSize: 28, fontWeight: FontWeight.w500),) ,
-                                    if(index == 3) Text(temperature ?? "updating",style: TextStyle(color: Colors.green, fontSize: 28, fontWeight: FontWeight.w500),) ,
-                                    if(index == 4) Text(depthDistance ?? "updating",style: TextStyle(color: Colors.green, fontSize: 28, fontWeight: FontWeight.w500),),
+                                    if (index == 0)
+                                      Text(
+                                        getLocation ?? "updating...",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: width*0.07142,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    if (index == 1)
+                                      Text(
+                                        batteryLevel ?? "updating...",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: width*0.07142,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    if (index == 2)
+                                      Text(
+                                        fuelLevel ?? "updating...",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: width*0.07142,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    if (index == 3)
+                                      Text(
+                                        temperature ?? "updating...",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: width*0.07142,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    if (index == 4)
+                                      Text(
+                                        depthDistance ?? "updating...",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: width*0.07142,
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -251,13 +280,13 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                       Positioned(
-                        right: 0,
-                        bottom: 80,
+                        right: width*0.02546,
+                        bottom: height*0.11119,
                         child: Text(
                           sensorInfo[index].position.toString(),
                           style: TextStyle(
                             fontFamily: 'Avenir',
-                            fontSize: 180,
+                            fontSize: width*0.45833,
                             color: primaryTextColor.withOpacity(0.08),
                             fontWeight: FontWeight.w900,
                           ),
