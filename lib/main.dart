@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mavericks/Models/UserModel.dart';
 import 'package:mavericks/pages/homepage.dart';
+import 'package:mavericks/pages/loginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Services/authservice.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,17 +15,21 @@ Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   await Firebase.initializeApp();
-  runApp(const MyApp());
-}
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var uid = prefs.getString('uid');
+  print(uid);
+  UserModel? userModel;
+  if (prefs.containsKey('uid')) {
+    final firestore = FirebaseFirestore.instance;
+    final user = await firestore.collection('users').doc(uid).get();
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: HomePage(),
-    );
+    userModel = UserModel.fromMap(user.data() as Map<String, dynamic>);
   }
+  runApp(MaterialApp(
+    home: uid == null
+        ? LoginPage()
+        : HomePage(
+            userModel: userModel,
+          ),
+  ));
 }

@@ -1,14 +1,21 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:mavericks/Models/UserModel.dart';
 import 'package:mavericks/constants.dart';
 import 'package:mavericks/data.dart';
+import 'package:mavericks/pages/aboutus.dart';
 import 'package:mavericks/pages/contributeUs.dart';
+import 'package:mavericks/pages/loginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    Key? key,
-  }) : super(key: key);
+  UserModel? userModel;
+  HomePage({Key? key, this.userModel}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -147,18 +154,17 @@ class _HomePageState extends State<HomePage>
               padding: const EdgeInsets.only(top: 5, left: 32, bottom: 20),
               child: Column(
                 children: <Widget>[
-                
                   Text(
-                    'Sanket Patil',
+                    widget.userModel!.fname! + "\t" + widget.userModel!.lname!,
                     style: TextStyle(
                       fontFamily: 'BalsamiqSans',
-                      fontSize: width*0.07653,
+                      fontSize: width * 0.07653,
                       color: const Color(0xffffffff),
                       fontWeight: FontWeight.w900,
                     ),
                     textAlign: TextAlign.left,
                   ),
-                ], 
+                ],
               ),
             ),
             SizedBox(
@@ -170,7 +176,7 @@ class _HomePageState extends State<HomePage>
                 'Dashboard',
                 style: TextStyle(
                   fontFamily: 'BalsamiqSans',
-                  fontSize: width*0.06365,
+                  fontSize: width * 0.06365,
                   color: const Color(0xffffffff),
                   fontWeight: FontWeight.w900,
                 ),
@@ -215,7 +221,7 @@ class _HomePageState extends State<HomePage>
                                       sensorInfo[index].name.toString(),
                                       style: TextStyle(
                                         fontFamily: 'Avenir',
-                                        fontSize: width*0.0561,
+                                        fontSize: width * 0.0561,
                                         color: const Color(0xff47455f),
                                         fontWeight: FontWeight.w900,
                                       ),
@@ -229,7 +235,7 @@ class _HomePageState extends State<HomePage>
                                         getLocation ?? "updating...",
                                         style: TextStyle(
                                             color: Colors.green,
-                                            fontSize: width*0.07142,
+                                            fontSize: width * 0.07142,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     if (index == 1)
@@ -237,7 +243,7 @@ class _HomePageState extends State<HomePage>
                                         batteryLevel ?? "updating...",
                                         style: TextStyle(
                                             color: Colors.green,
-                                            fontSize: width*0.07142,
+                                            fontSize: width * 0.07142,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     if (index == 2)
@@ -245,7 +251,7 @@ class _HomePageState extends State<HomePage>
                                         fuelLevel ?? "updating...",
                                         style: TextStyle(
                                             color: Colors.green,
-                                            fontSize: width*0.07142,
+                                            fontSize: width * 0.07142,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     if (index == 3)
@@ -253,7 +259,7 @@ class _HomePageState extends State<HomePage>
                                         temperature ?? "updating...",
                                         style: TextStyle(
                                             color: Colors.green,
-                                            fontSize: width*0.07142,
+                                            fontSize: width * 0.07142,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     if (index == 4)
@@ -261,7 +267,7 @@ class _HomePageState extends State<HomePage>
                                         depthDistance ?? "updating...",
                                         style: TextStyle(
                                             color: Colors.green,
-                                            fontSize: width*0.07142,
+                                            fontSize: width * 0.07142,
                                             fontWeight: FontWeight.w500),
                                       ),
                                   ],
@@ -280,13 +286,13 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                       Positioned(
-                        right: width*0.02546,
-                        bottom: height*0.11119,
+                        right: width * 0.02546,
+                        bottom: height * 0.11119,
                         child: Text(
                           sensorInfo[index].position.toString(),
                           style: TextStyle(
                             fontFamily: 'Avenir',
-                            fontSize: width*0.45833,
+                            fontSize: width * 0.45833,
                             color: primaryTextColor.withOpacity(0.08),
                             fontWeight: FontWeight.w900,
                           ),
@@ -461,11 +467,26 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
             child: InkWell(
               onTap: () async {
+                if (i == 0) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AboutUs()));
+                }
                 if (i == 1) {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => ContributeUs()));
                 }
-                if (i == 0) {}
+                if (i == 2) {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+
+                  FirebaseAuth auth = FirebaseAuth.instance;
+                  auth.signOut();
+
+                  var uid = prefs.remove('uid');
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                }
               },
               child: ListTile(
                 leading: _icon[i],
