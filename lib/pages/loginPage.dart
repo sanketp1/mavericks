@@ -94,22 +94,25 @@ class _LoginPageState extends State<LoginPage> {
     if (userCredential != null) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       await preferences.setString('uid', userCredential.user!.uid);
-
+      setState(() {
+        _onclick = false;
+      });
       final user = await firestore
           .collection('users')
           .doc(userCredential.user!.uid)
           .get();
 
       final userModel = UserModel.fromMap(user.data() as Map<String, dynamic>);
-      final progress = UiHelper(trigger: false);
-      progress.showprogress(context);
+
       Navigator.pop(context);
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => HomePage(userModel: userModel)));
     }
   }
+
+  bool visible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
-                            obscureText: true,
+                            obscureText: visible,
                             controller: _password,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -250,12 +253,35 @@ class _LoginPageState extends State<LoginPage> {
                                 return null;
                             },
                             cursorColor: Colors.yellow,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                             decoration: InputDecoration(
                               prefixIcon: Icon(
                                 Icons.password_rounded,
                                 color: Colors.white,
                               ),
+                              suffixIcon: IconButton(
+                              onPressed: () {
+                                if (visible) {
+                                  setState(() {
+                                    visible = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    visible = true;
+                                  });
+                                }
+                              },
+                              icon: visible
+                                  ? Icon(
+                                      Icons.visibility,
+                                      color: Colors.white,
+                                    )
+                                  : Icon(
+                                      Icons.visibility_off,
+                                      color: Colors.white,
+                                    ),
+                            ),
+
                               hintText: "Password",
                               hintStyle: TextStyle(
                                   color: Colors.white,
@@ -286,8 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                                 setState(() {
                                   _onclick = true;
                                 });
-                                final progress = UiHelper(trigger: true);
-                                progress.showprogress(context);
+
                                 onLogin();
                               },
                               child: AnimatedContainer(

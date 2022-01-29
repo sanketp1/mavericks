@@ -7,17 +7,18 @@ import 'package:mavericks/pages/homepage.dart';
 import 'package:mavericks/pages/loginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Services/authservice.dart';
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var uid = prefs.getString('uid');
-  print(uid);
+
   UserModel? userModel;
   if (prefs.containsKey('uid')) {
     final firestore = FirebaseFirestore.instance;
@@ -27,7 +28,7 @@ Future<void> main() async {
   }
   runApp(MaterialApp(
     home: uid == null
-        ? LoginPage()
+        ? const LoginPage()
         : HomePage(
             userModel: userModel,
           ),
